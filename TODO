@@ -1,0 +1,4 @@
+# Lista de tarefas a fazer no projeto
+
+- [ ] Resolver o bug do Hibernate ao criar tabela do Order e do Product
+- [ ] Contiuar a partir do Repository
