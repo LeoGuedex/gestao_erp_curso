@@ -10,8 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import leoguedex.com.github.gestao_erp_curso.domain.enums.PaymentType;
@@ -25,8 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "order")
-public class Order {
+public class Orders {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,18 +33,18 @@ public class Order {
   private String instance;
 
   @ManyToOne
-  @JoinColumn(name = "person_id")
-  private Person client;
+  @JoinColumn(name = "client_id")
+  private Client client;
 
   private String address;
 
   @Enumerated(EnumType.STRING)
   private PaymentType paymentType;
 
-  @OneToMany(mappedBy = "id.order")
+  @OneToMany(mappedBy = "id.orders")
   private Set<ItemOrder> itens = new HashSet<>();
 
-  public Order(Client client, String address, PaymentType paymentType) {
+  public Orders(Client client, String address, PaymentType paymentType) {
     this.client = client;
     this.address = address;
     this.paymentType = paymentType;

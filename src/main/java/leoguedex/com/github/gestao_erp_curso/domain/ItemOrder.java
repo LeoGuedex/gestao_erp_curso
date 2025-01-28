@@ -3,7 +3,6 @@ package leoguedex.com.github.gestao_erp_curso.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "item_order")
 public class ItemOrder {
 
   @JsonIgnore
@@ -24,8 +22,8 @@ public class ItemOrder {
   private Double quantity;
   private Double price;
 
-  public ItemOrder(Order order, Product product, Double quantity, Double price) {
-    this.id.setOrder(order);
+  public ItemOrder(Orders orders, Product product, Double quantity, Double price) {
+    this.id.setOrders(orders);
     this.id.setProduct(product);
     this.quantity = quantity;
     this.price = price;
@@ -35,12 +33,12 @@ public class ItemOrder {
     return price * quantity;
   }
 
-  public Order getOrder() {
-    return this.id.getOrder();
+  public Orders getOrder() {
+    return this.id.getOrders();
   }
 
-  public void setOrder(Order order) {
-    id.setOrder(order);
+  public void setOrder(Orders orders) {
+    id.setOrders(orders);
   }
 
   public Product getProduct() {
