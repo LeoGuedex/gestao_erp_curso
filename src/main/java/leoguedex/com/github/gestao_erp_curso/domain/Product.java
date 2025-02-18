@@ -15,15 +15,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import leoguedex.com.github.gestao_erp_curso.domain.enums.ProductType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "product")
 public class Product {
 

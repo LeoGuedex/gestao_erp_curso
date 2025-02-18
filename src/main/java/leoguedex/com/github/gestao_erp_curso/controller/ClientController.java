@@ -28,7 +28,7 @@ public class ClientController {
     this.clientService = clientService;
   }
 
-  @PostMapping(consumes = "application/json", produces = "application/json")
+  @PostMapping(consumes = "application/json")
   public ResponseEntity<Void> createClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
     ClientResponseDTO savedClient = clientService.createClient(clientDTO);
 
