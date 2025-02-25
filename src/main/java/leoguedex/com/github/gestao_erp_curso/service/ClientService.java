@@ -116,4 +116,8 @@ public class ClientService {
     clientRepository.deleteById(id);
   }
 
+  public Optional<Client> returnClientById(Long clientId) {
+    return clientRepository.findById(clientId);
+  }
+
 }
