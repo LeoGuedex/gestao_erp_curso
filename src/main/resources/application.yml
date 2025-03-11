@@ -2,4 +2,4 @@ spring:
    application:
      name: gestao_erp_curso
    profiles:
-     active:  local
+     active:  prod

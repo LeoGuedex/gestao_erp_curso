@@ -38,8 +38,8 @@ public class ClientController {
   }
 
   @GetMapping(produces = "application/json", path = "/{id}")
-  public ResponseEntity<ClientResponseDTO> getClient(@PathVariable Long id) {
-    ClientResponseDTO client = clientService.findById(id);
+  public ResponseEntity<ClientResponseDTO> getClient(@PathVariable Integer id) {
+    ClientResponseDTO client = clientService.findById(Long.valueOf(id));
 
     if (client == null) {
       return ResponseEntity.badRequest().build();
@@ -56,15 +56,15 @@ public class ClientController {
   }
 
   @PutMapping(consumes = "application/json", produces = "application/json", path = "/{id}")
-  public ResponseEntity<ClientResponseDTO> updateClient(@PathVariable Long id,
+  public ResponseEntity<ClientResponseDTO> updateClient(@PathVariable Integer id,
       @Valid @RequestBody ClientUpdateRequestDTO clientDTO) {
-    ClientResponseDTO result = clientService.updateClient(id, clientDTO);
+    ClientResponseDTO result = clientService.updateClient(Long.valueOf(id), clientDTO);
     return ResponseEntity.ok(result);
   }
 
   @DeleteMapping(path = "/{id}")
-  public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
-    clientService.deleteClient(id);
+  public ResponseEntity<Void> deleteClient(@PathVariable Integer id) {
+    clientService.deleteClient(Long.valueOf(id));
 
     return ResponseEntity.noContent().build();
   }

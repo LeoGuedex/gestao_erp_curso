@@ -35,8 +35,8 @@ public class ProductController {
   }
 
   @GetMapping(produces = "application/json", path = "/{id}")
-  public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable Long id) {
-    return ResponseEntity.ok(productService.findById(id));
+  public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable Integer id) {
+    return ResponseEntity.ok(productService.findById(Long.valueOf(id)));
   }
 
   @GetMapping(produces = "application/json")
@@ -45,14 +45,14 @@ public class ProductController {
   }
 
   @PutMapping(consumes = "application/json", produces = "application/json", path = "/{id}")
-  public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,
+  public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Integer id,
       @Valid @RequestBody ProductUpdateRequestDTO productDTO) {
-    return ResponseEntity.ok(productService.updateProduct(id, productDTO));
+    return ResponseEntity.ok(productService.updateProduct(Long.valueOf(id), productDTO));
   }
 
   @DeleteMapping(path = "/{id}")
-  public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-    productService.deleteProduct(id);
+  public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+    productService.deleteProduct(Long.valueOf(id));
     return ResponseEntity.noContent().build();
   }
 

@@ -1,5 +1,6 @@
 package leoguedex.com.github.gestao_erp_curso.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -40,6 +41,7 @@ public class Client {
   @CollectionTable(name = "phones_numbers")
   private Set<String> phoneNumbers;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "client")
   private List<Orders> orders = new ArrayList<>();
 

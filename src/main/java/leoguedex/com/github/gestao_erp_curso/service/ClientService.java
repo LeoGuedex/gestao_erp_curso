@@ -32,9 +32,9 @@ public class ClientService {
 
     Client savedClient = clientRepository.save(clientToSave);
     ClientResponseDTO result = new ClientResponseDTO(savedClient.getId(), savedClient.getBalance(),
-        savedClient.getPhoneNumbers(), savedClient.getOrders(), savedClient.getName(), savedClient.getCpf(),
-        savedClient.getLongitude(), savedClient.getLatitude(), savedClient.getEmail(), savedClient.getGender(),
-        savedClient.getAge());
+        savedClient.getPhoneNumbers(), savedClient.getName(), savedClient.getCpf(), savedClient.getLongitude(),
+        savedClient.getLatitude(), savedClient.getEmail(), savedClient.getGender(), savedClient.getAge(),
+        savedClient.getOrders());
 
     return result;
   }
@@ -46,8 +46,8 @@ public class ClientService {
       Client client = optionalClient.get();
 
       ClientResponseDTO result = new ClientResponseDTO(client.getId(), client.getBalance(), client.getPhoneNumbers(),
-          client.getOrders(), client.getName(), client.getCpf(), client.getLongitude(), client.getLatitude(),
-          client.getEmail(), client.getGender(), client.getAge());
+          client.getName(), client.getCpf(), client.getLongitude(), client.getLatitude(), client.getEmail(),
+          client.getGender(), client.getAge(), client.getOrders());
 
       return result;
     } else {
@@ -59,9 +59,9 @@ public class ClientService {
     List<Client> clientList = clientRepository.findAll();
 
     List<ClientResponseDTO> dtoList = clientList.stream().map(client -> {
-      return new ClientResponseDTO(client.getId(), client.getBalance(), client.getPhoneNumbers(), client.getOrders(),
-          client.getName(), client.getCpf(), client.getLongitude(), client.getLatitude(), client.getEmail(),
-          client.getGender(), client.getAge());
+      return new ClientResponseDTO(client.getId(), client.getBalance(), client.getPhoneNumbers(), client.getName(),
+          client.getCpf(), client.getLongitude(), client.getLatitude(), client.getEmail(), client.getGender(),
+          client.getAge(), client.getOrders());
     }).toList();
 
     return dtoList;
@@ -76,8 +76,8 @@ public class ClientService {
     Client savedClient = clientRepository.save(clientUpdated);
 
     return new ClientResponseDTO(savedClient.getId(), savedClient.getBalance(), savedClient.getPhoneNumbers(),
-        savedClient.getOrders(), savedClient.getName(), savedClient.getCpf(), savedClient.getLongitude(),
-        savedClient.getLatitude(), savedClient.getEmail(), savedClient.getGender(), savedClient.getAge());
+        savedClient.getName(), savedClient.getCpf(), savedClient.getLongitude(), savedClient.getLatitude(),
+        savedClient.getEmail(), savedClient.getGender(), savedClient.getAge(), savedClient.getOrders());
   }
 
   private Client updateFields(Client client, ClientUpdateRequestDTO clientDTO) {
@@ -120,4 +120,7 @@ public class ClientService {
     return clientRepository.findById(clientId);
   }
 
+  public Client getClientById(Long clientId) {
+    return clientRepository.findById(clientId).orElseThrow(() -> new ClientNotFoundException("Client Not Found"));
+  }
 }
