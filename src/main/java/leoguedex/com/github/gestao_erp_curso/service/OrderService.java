@@ -6,13 +6,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import leoguedex.com.github.gestao_erp_curso.domain.Client;
+import leoguedex.com.github.gestao_erp_curso.domain.ItemOrder;
 import leoguedex.com.github.gestao_erp_curso.domain.Orders;
+import leoguedex.com.github.gestao_erp_curso.domain.Product;
 import leoguedex.com.github.gestao_erp_curso.domain.dto.request.CreateOrderRequestDTO;
 import leoguedex.com.github.gestao_erp_curso.domain.dto.request.OrderUpdateRequestDTO;
 import leoguedex.com.github.gestao_erp_curso.domain.dto.response.OrderResponseDTO;
 import leoguedex.com.github.gestao_erp_curso.exceptions.ClientNotFoundException;
 import leoguedex.com.github.gestao_erp_curso.exceptions.OrderNotFoundException;
+import leoguedex.com.github.gestao_erp_curso.repository.ItemOrderRepository;
 import leoguedex.com.github.gestao_erp_curso.repository.OrderRepository;
+import leoguedex.com.github.gestao_erp_curso.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,8 @@ public class OrderService {
 
   private final ClientService clientService;
   private final OrderRepository orderRepository;
+  private final ProductRepository productRepository;
+  private final ItemOrderRepository itemOrderRepository;
 
   public Long createOrder(@Valid CreateOrderRequestDTO dto) {
     Orders order = convertCreateOrderDtoInOrder(dto);
@@ -41,7 +47,25 @@ public class OrderService {
       throw new ClientNotFoundException("Cliente nao localizado, com o id: " + dto.client());
     }
 
-    return orders;
+    return createItemOrderByProducts(dto, orderRepository.save(orders));
+  }
+
+  private Orders createItemOrderByProducts(CreateOrderRequestDTO dto, Orders savedOrder) {
+    dto.products().forEach(p -> {
+      Optional<Product> productByName = productRepository.findProductByName(p.getProductName());
+      if (productByName.isPresent()) {
+        Product product = productByName.get();
+        Double itemQuantity = Double.valueOf(p.getQuantity());
+        Double totalPriceProduct = p.getQuantity() * product.getPrice();
+
+        ItemOrder savedItem = itemOrderRepository.save(
+            new ItemOrder(savedOrder, product, itemQuantity, totalPriceProduct));
+
+        savedOrder.getItens().add(savedItem);
+      }
+    });
+
+    return orderRepository.save(savedOrder);
   }
 
   public OrderResponseDTO findById(Long id) {
