@@ -24,7 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping(value = "/clients")
 public class ClientController {
 
-  private final ClientService clientService;
+  protected final ClientService clientService;
 
   public ClientController(ClientService clientService) {
     this.clientService = clientService;
