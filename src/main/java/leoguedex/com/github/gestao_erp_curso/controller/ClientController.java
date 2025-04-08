@@ -1,11 +1,15 @@
 package leoguedex.com.github.gestao_erp_curso.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import leoguedex.com.github.gestao_erp_curso.domain.Product;
 import leoguedex.com.github.gestao_erp_curso.domain.dto.request.ClientRequestDTO;
 import leoguedex.com.github.gestao_erp_curso.domain.dto.request.ClientUpdateRequestDTO;
 import leoguedex.com.github.gestao_erp_curso.domain.dto.response.ClientResponseDTO;
+import leoguedex.com.github.gestao_erp_curso.domain.enums.ProductType;
 import leoguedex.com.github.gestao_erp_curso.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -75,4 +79,15 @@ public class ClientController {
     return ResponseEntity.noContent().build();
   }
 
+  @GetMapping(produces = "application/json", value = "/generated-json-from-object")
+  public ResponseEntity<String> generateJson() throws JsonProcessingException {
+    Product product = new Product();
+    product.setName("Macarrao");
+    product.setPrice(20.5);
+    product.setProductType(ProductType.FOOD);
+
+    String result = new ObjectMapper().writeValueAsString(product);
+
+    return ResponseEntity.ok(result);
+  }
 }

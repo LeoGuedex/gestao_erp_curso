@@ -1,5 +1,10 @@
 package leoguedex.com.github.gestao_erp_curso.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -22,11 +27,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
+@Tag(name = "Controlador de Produtos", description = "Controlador para ações relacionadas a Produto")
 public class ProductController {
 
   private final ProductService productService;
 
   @PostMapping(consumes = "application/json")
+  @Operation(summary = "Criação de Produto", description = "Deve criar um produto quando receber todos dados corretamente")
   public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequestDTO productDTO) {
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(productService.createProduct(productDTO).id()).toUri();
@@ -50,7 +57,14 @@ public class ProductController {
     return ResponseEntity.ok(productService.updateProduct(Long.valueOf(id), productDTO));
   }
 
+  @Hidden
   @DeleteMapping(path = "/{id}")
+  @Operation(summary = "Exclusão de Produto", description = "Deve apagar um produto, usando o Id Recebido")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Requisição com sucesso"),
+      @ApiResponse(responseCode = "404", description = "Objeto com id não localizado"),
+      @ApiResponse(responseCode = "500", description = "Erro do servidor")
+  })
   public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
     productService.deleteProduct(Long.valueOf(id));
     return ResponseEntity.noContent().build();
