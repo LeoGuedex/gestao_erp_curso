@@ -1,5 +1,21 @@
 spring:
-   application:
-     name: gestao_erp_curso
-   profiles:
-     active:  local
+  application:
+    name: gestao_erp_curso
+  profiles:
+    active: local
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: diskSpace, db, website
+        liveness:
+          include: ping, memory
