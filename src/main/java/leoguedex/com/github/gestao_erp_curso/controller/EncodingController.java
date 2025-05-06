@@ -1,13 +1,17 @@
 package leoguedex.com.github.gestao_erp_curso.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers.Base;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import leoguedex.com.github.gestao_erp_curso.domain.Client;
+import leoguedex.com.github.gestao_erp_curso.repository.ClientRepository;
+import leoguedex.com.github.gestao_erp_curso.utils.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -16,8 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/encoding")
 public class EncodingController {
+
+  private final ClientRepository clientRepository;
 
   @PostMapping("/base64")
   public ResponseEntity<Map<String, String>> testBase64(@RequestBody String texto) {
@@ -105,5 +112,18 @@ public class EncodingController {
     result.put("Senha", senha);
 
     return ResponseEntity.ok(result);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+
+    Client client = clientRepository.findByEmail(email);
+
+    if (client != null && client.getPassword().equals(password)) {
+      String tokenJWT = JwtUtil.gerarToken(client);
+      return ResponseEntity.ok(tokenJWT);
+    }
+
+    return ResponseEntity.status(401).body("Usuário ou Senha Inválida!");
   }
 }

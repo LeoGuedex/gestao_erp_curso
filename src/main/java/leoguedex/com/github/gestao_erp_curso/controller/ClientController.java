@@ -11,7 +11,9 @@ import leoguedex.com.github.gestao_erp_curso.domain.dto.request.ClientUpdateRequ
 import leoguedex.com.github.gestao_erp_curso.domain.dto.response.ClientResponseDTO;
 import leoguedex.com.github.gestao_erp_curso.domain.enums.ProductType;
 import leoguedex.com.github.gestao_erp_curso.service.ClientService;
+import leoguedex.com.github.gestao_erp_curso.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -73,10 +76,19 @@ public class ClientController {
   }
 
   @DeleteMapping(path = "/{id}")
-  public ResponseEntity<Void> deleteClient(@PathVariable Integer id) {
-    clientService.deleteClient(Long.valueOf(id));
+  public ResponseEntity<Void> deleteClient(@PathVariable Integer id,
+      @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
 
-    return ResponseEntity.noContent().build();
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+      String result = JwtUtil.validarToken(authHeader.substring(7));
+
+      if (result != null) {
+        clientService.deleteClient(Long.valueOf(id));
+        return ResponseEntity.noContent().build();
+      }
+    }
+
+    return ResponseEntity.status(401).build();
   }
 
   @GetMapping(produces = "application/json", value = "/generated-json-from-object")
