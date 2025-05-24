@@ -3,6 +3,16 @@ spring:
     name: gestao_erp_curso
   profiles:
     active: local
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: demo-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 management:
   endpoints:
@@ -14,8 +24,8 @@ management:
       show-details: always
       probes:
         enabled: true
-      group:
-        readiness:
-          include: diskSpace, db, website
-        liveness:
-          include: ping, memory
+#      group:
+#        readiness:
+#          include: diskSpace, db
+#        liveness:
+#          include: ping, memory
